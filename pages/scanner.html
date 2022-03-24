@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attend QR</title>
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <script type="text/javascript" src="../scripts/adapter.min.js"></script>
+    <script type="text/javascript" src="../scripts/vue.min.js"></script>
+    <script type="text/javascript" src="../scripts/instascan.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-list">
+            <div class="logo"><a href=""><img src="../assets/apple-touch-icon.png" alt="logo" style="width:40px;height:40px;border-radius:50px;"></a></div>
+            <!-- <li class="nav-item"><a href="">Scan</a></li> -->
+            <li class="nav-item"><a href="contact.html">Contact</a></li>
+            <li class="nav-item"><a href="logout.html"><img src="../assets/logout.png" alt="Logout"></a></li>
+        </ul>
+    </nav>
+
+    <div class="canvas">
+        <h1 class="scan">Scan</h1>
+        <div id="video-container">
+            <video id="preview" width="100%"></video>
+        </div>
+        <form action="./attend.html">
+            <input type="text" name="studentid" id="stud" readonyy="" placeholder="Student ID" class="form-control">
+            <input type="submit" id="ID" value="Scan">
+        </form>
+    </div>
+
+    <script>
+        let scanner = new Instance.Scanner({ video: document.getElementById('preview') });  
+        Instascan.Camera.getCameras().then(function(cameras){
+            if(camera.length > 0){
+                scanner.start(cameras[0]);
+            } else {
+                alert('No cameras found');
+            }
+        } ).catch(function(e) {
+            console.error(e);
+        } );
+
+        scanner.addListener('scan', function(content){
+            document.getElementById('stud').value = content;
+        } );
+    </script>
+</body>
+</html>
