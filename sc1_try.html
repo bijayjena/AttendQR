@@ -4,12 +4,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attend QR</title>
-    
     <link rel="stylesheet" href="../css/styles.css">
+
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    
+    <script type="text/javascript" src="../scripts/adapter.min.js"></script>
+    <script type="text/javascript" src="../scripts/vue.min.js"></script>
+    <script type="text/javascript" src="../scripts/instascan.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -23,42 +28,32 @@
         </ul>
     </nav>
 
-    <script src="https://unpkg.com/html5-qrcode"></script>
-
     <div class="canvas">
         <h1 class="scan">Scan</h1>
-    
-        <div id="reader" style="width:300px">
+        <div id="video-container">
+            <video id="preview" width="100%"></video>
         </div>
-        
-        <div id="qr-reader-results">
-            <h3>Result : </h3>
-        </div>
-
         <form action="./attend.html">
-            <input type="text" name="stud" id="stud" placeholder="Student ID">
+            <input type="text" name="stud" id="stud" readonyy="" placeholder="Student ID" class="form-control">
             <input type="submit" id="ID" value="Scan">
         </form>
     </div>
 
-    <script type="text/javascript">
-        var resultContainer = document.getElementById('qr-reader-results');
-        var lastResult, countResults = 0;
-
-        function onScanSuccess(decodedText, decodedResult) {
-            if (decodedText !== lastResult) {
-                ++countResults;
-                lastResult = decodedText;
-                // Handle on success condition with the decoded message.
-                console.log(`Scan result ${decodedText}`, decodedResult);
-                document.getElementById('stud').value = decodedText;
+    <script>
+        let scanner = new Instance.Scanner({ video: document.getElementById('preview') });  
+        Instascan.Camera.getCameras().then(function(cameras){
+            if(camera.length > 0){
+                scanner.start(cameras[0]);
+            } else {
+                alert('No cameras found');
             }
-            //console.log(decodedResult)
-        }
+        } ).catch(function(e) {
+            console.error(e);
+        } );
 
-        var html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 20, qrbox: 300 });
-        html5QrcodeScanner.render(onScanSuccess);
+        scanner.addListener('scan', function(content){
+            document.getElementById('stud').value = content;
+        } );
     </script>
 </body>
 </html>
